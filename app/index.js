@@ -8,5 +8,5 @@ app.use(express.json())
 app.get('/api/products',controller.getProducts);
 
 app.listen(PORT,()=>{
-    console.log('server is running');
+    console.log(`server is running on port ${PORT}`);
 })
