@@ -1,5 +1,5 @@
 const conn = require("../../dbconfig/db");
-exports.getProducts = (req, res) => {
+exports.getProducts = (req,res) => {
   try {
     let currentPage = req.body.currentPage ? req.body.currentPage : 1;
     let pageSize = req.body.pageSize ? req.body.pageSize : 10;
@@ -9,21 +9,21 @@ exports.getProducts = (req, res) => {
     let searchBy = req.body.searchBy ? req.body.searchBy : "";
 
     let offset = (currentPage - 1) * pageSize;
-
     let rawQuery = `select * from ProductV2 `;
 
     if (searchFields && searchBy) {
       rawQuery += "where ";
-      for (val of searchFields) {
-        rawQuery += `${val} = "${searchBy}" `;
+      for(let i=0;i<searchFields.length;i++){
+        rawQuery += `${searchFields[i]} = "${searchBy}" `;
+        if(i != searchFields.length-1){
+          rawQuery += `and `
+        }
       }
     }
 
     let query2 = `order by ${orderBy} ${orderDir} limit ${pageSize} offset ${offset};`;
-
     let finalquery = rawQuery + query2;
-    console.log(finalquery);
-
+    
     conn.query(finalquery, (err, result) => {
       if (err) {
         res.status(400).json(err);
@@ -39,6 +39,6 @@ exports.getProducts = (req, res) => {
       }
     });
   } catch (error) {
-    res.status(400),json(error);
+    res.status(400).json(error);
   }
 };
